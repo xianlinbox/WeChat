@@ -4,7 +4,6 @@ require 'logger'
 require File.dirname(__FILE__)+'/wechat_request'
 
 class WeChat
-  include WeChatHelper
   attr_reader :url
 
   def initialize(url, token)
@@ -28,9 +27,7 @@ class WeChat
   def response(weChat_response)
     weChat_response.to_xml
   end
-end
 
-module WeChatHelper
   def generate_signature(token, timestamp, nonce)
     key = [token.to_s, timestamp.to_s, nonce.to_s].sort!.join
     Digest::SHA1.hexdigest(key)

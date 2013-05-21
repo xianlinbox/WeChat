@@ -57,4 +57,12 @@ class WeChatRequest
   define_method :element_content do |args|
     @raw_message.scan(/<#{args}>(.*)<\/#{args}>/).flatten.join
   end
+
+  def method_missing(name, *args)
+    event_type = name.to_s.scan(/is_(.*)_event?/).flatten.join
+    if event_type != nil
+      return is_type_of?('event') && @event == event_type
+    end
+    super.method_missing(name, *args)
+  end
 end

@@ -87,4 +87,16 @@ describe 'wechat_request initialization' do
       request = WeChatRequest.new(raw_message_builder { error_type_message })
     }.to raise_error(TypeError)
   end
+
+  it 'should can distinguish the event type' do
+    event_message = <<-EOF
+      <MsgType><![CDATA[event]]></MsgType>
+      <Event><![CDATA[subscribe]]></Event>
+      <EventKey><![CDATA[EVENTKEY]]></EventKey>
+    EOF
+    request = WeChatRequest.new(raw_message_builder { event_message })
+    assertCommonFields(request)
+    request.is_subscribe_event?.should be_true
+    request.is_unsubscribe_event?.should be_false
+  end
 end
